@@ -153,56 +153,56 @@ function buildNpmDependencies(): any {
 }
 
 const command: Command = {
-	description: 'create a build of your application',
+	description: 'Create a build of your application.',
 	register(options: OptionsHelper): void {
 		options('w', {
 			alias: 'watch',
-			describe: 'watch and serve'
+			describe: 'Watch and serve.'
 		});
 
 		options('p', {
 			alias: 'port',
-			describe: 'port to serve on when using --watch',
+			describe: 'The port on which to serve files when using --watch.',
 			type: 'number'
 		});
 
 		options('t', {
 			alias: 'with-tests',
-			describe: 'build tests as well as sources'
+			describe: 'Build tests as well as sources.'
 		});
 
 		options('locale', {
-			describe: 'The default locale for the application',
+			describe: 'The default locale for the application.',
 			type: 'string'
 		});
 
 		options('supportedLocales', {
-			describe: 'Any additional locales supported by the application',
+			describe: 'The locales supported by the application.',
 			type: 'array'
 		});
 
 		options('messageBundles', {
-			describe: 'Any message bundles to include in the build',
+			describe: 'The message bundles to include in the build.',
 			type: 'array'
 		});
 
 		options('element', {
-			describe: 'Path to a custom element descriptor factory',
+			describe: 'The path to a custom element descriptor factory.',
 			type: 'string'
 		});
 
 		options('elementPrefix', {
-			describe: 'Output file for custom element',
+			describe: 'The output file for custom element.',
 			type: 'string'
 		});
 
 		options('debug', {
-			describe: 'Generate package information useful for debugging',
+			describe: 'Generate package information useful for debugging.',
 			type: 'boolean'
 		});
 
 		options('disableLazyWidgetDetection', {
-			describe: 'Disable lazy widget loading detection',
+			describe: 'Disable lazy widget loading detection.',
 			type: 'boolean'
 		});
 	},
