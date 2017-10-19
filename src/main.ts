@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as net from 'net';
 import * as path from 'path';
 import webpack = require('webpack');
+import Compilation = require('webpack/lib/Compilation');
 
 const WebpackDevServer: any = require('webpack-dev-server');
 const config: ConfigFactory = require('./webpack.config');
@@ -40,7 +41,7 @@ export interface BuildArgs {
 }
 
 interface ConfigFactory {
-	(args: Partial<BuildArgs>): webpack.Config;
+	(args: Partial<BuildArgs>): webpack.Configuration;
 }
 
 interface WebpackOptions {
@@ -118,7 +119,7 @@ async function isPortAvailable(port: number): Promise<boolean> {
 	});
 }
 
-async function watch(config: webpack.Config, options: WebpackOptions, args: BuildArgs): Promise<void> {
+async function watch(config: webpack.Configuration, options: WebpackOptions, args: BuildArgs): Promise<void> {
 	config.devtool = 'inline-source-map';
 
 	config.entry = (function (entry) {
@@ -183,7 +184,7 @@ async function watch(config: webpack.Config, options: WebpackOptions, args: Buil
 	});
 }
 
-function compile(config: webpack.Config, options: WebpackOptions, args: BuildArgs): Promise<void> {
+function compile(config: webpack.Configuration, options: WebpackOptions, args: BuildArgs): Promise<void> {
 	const compiler = webpack(config);
 	return new Promise<void>((resolve, reject) => {
 		compiler.run((err, stats) => {
@@ -199,7 +200,8 @@ function compile(config: webpack.Config, options: WebpackOptions, args: BuildArg
 
 				console.log(stats.toString(options.stats));
 
-				if (stats.compilation && stats.compilation.errors && stats.compilation.errors.length > 0 && !args.force) {
+				const compilation: Compilation = (<any> stats).compilation;
+				if (compilation && compilation.errors && compilation.errors.length > 0 && !args.force) {
 					reject({
 						exitCode: 1,
 						message: 'The build failed with errors. Use the --force to overcome this obstacle.'

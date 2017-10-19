@@ -1,8 +1,8 @@
 import * as path from 'path';
 import LoadPlugin from '../../../src/plugins/CoreLoadPlugin';
 import { hasExtension, resolveMid } from '../../../src/plugins/util/main';
-import ConcatSource = require('webpack-sources/lib/ConcatSource');
-import NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
+import { ConcatSource } from 'webpack-sources';
+import { NormalModuleReplacementPlugin } from 'webpack';
 import Compilation = require('../../support/webpack/Compilation');
 import CompilationParams = require('../../support/webpack/CompilationParams');
 import Compiler = require('../../support/webpack/Compiler');
@@ -70,7 +70,7 @@ describe('core-load', () => {
 		const plugin = new LoadPlugin();
 		const { moduleTemplate } = compilation;
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		assert.strictEqual(compiler.plugins['compilation'].length, 1);
 
 		compiler.mockApply('compilation', compilation, params);
@@ -84,7 +84,7 @@ describe('core-load', () => {
 		const compiler = new Compiler();
 		const plugin = new LoadPlugin();
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		const replacementPlugin = compiler.applied[0];
 		assert.instanceOf(replacementPlugin, NormalModuleReplacementPlugin);
 		assert.strictEqual(replacementPlugin.resourceRegExp.toString(), '/@dojo(\\\\|\\/)core(\\\\|\\/)load\\.js/');
@@ -96,7 +96,7 @@ describe('core-load', () => {
 		const compiler = new Compiler();
 		const plugin = new LoadPlugin({ basePath: '/root/path' });
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation);
 		const source = compilation.moduleTemplate.mockApply('module', '', {
 			meta: { isPotentialLoad: true },
@@ -117,7 +117,7 @@ describe('core-load', () => {
 		const load = new NormalModule(url, url, '@dojo/core/load', [], url, params.parser);
 
 		load.id = 42;
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation);
 		compilation.mockApply('optimize-module-ids', [ load ]);
 
@@ -135,7 +135,7 @@ describe('core-load', () => {
 		const plugin = new LoadPlugin();
 		const module = createModule('/path/to', 'module', 42, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation, params);
 		compilation.mockApply('optimize-module-ids', [ module ]);
 
@@ -151,7 +151,7 @@ describe('core-load', () => {
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 		const module = createModule('', '', 0, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation, params);
 		compilation.mockApply('optimize-module-ids', [ module, load ]);
 
@@ -169,7 +169,7 @@ describe('core-load', () => {
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 		const module = createModule('/path/to', 'module/id', 8675309, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation, params);
 		compilation.mockApply('optimize-module-ids', [ module, load ]);
 
@@ -192,7 +192,7 @@ describe('core-load', () => {
 		const module = createModule('/path/to', './module', 1, params);
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		params.parser.state = { current: issuer };
 		compiler.mockApply('compilation', compilation, params);
 		params.normalModuleFactory.mockApply('parser', params.parser);
@@ -217,7 +217,7 @@ describe('core-load', () => {
 		const module = createModule('/different/path/to', './module', 1, params);
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		params.parser.state = { current: issuer };
 		compiler.mockApply('compilation', compilation, params);
 		params.normalModuleFactory.mockApply('parser', params.parser);
@@ -239,7 +239,7 @@ describe('core-load', () => {
 		const module = createModule('src/different/path/to', './module', 1, params);
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation, params);
 		params.normalModuleFactory.mockApply('parser', params.parser);
 		params.parser.mockApply('expression require');
@@ -262,7 +262,7 @@ describe('core-load', () => {
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
 		const module = createModule('/path/to', 'bundle!module', 1, params);
 
-		plugin.apply(compiler);
+		plugin.apply(<any> compiler);
 		compiler.mockApply('compilation', compilation);
 		compilation.mockApply('optimize-module-ids', [ module, load ]);
 

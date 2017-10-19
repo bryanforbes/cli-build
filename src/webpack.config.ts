@@ -1,5 +1,5 @@
 import webpack = require('webpack');
-import NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
+import { NormalModuleReplacementPlugin } from 'webpack';
 import * as path from 'path';
 import { existsSync, readFileSync } from 'fs';
 import Set from '@dojo/shim/Set';
@@ -120,7 +120,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 		path: path.resolve('./dist')
 	};
 
-	const config: webpack.Config = {
+	const config: webpack.Configuration = {
 		externals: [
 			function (context, request, callback) {
 				const externals = externalDependencies || [];
@@ -138,7 +138,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 					return callback(null, `${type} ${request}`);
 				}
 
-				callback();
+				callback(null, undefined);
 			}
 		],
 		entry: includeWhen(args.element, args => {
@@ -187,7 +187,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 				test: /tests\/unit\/all\.*/
 			}),
 			new IgnorePlugin(/request\/providers\/node/),
-			new NormalModuleReplacementPlugin(/\.m.css$/, result => {
+			new NormalModuleReplacementPlugin(/\.m.css$/, (result: any) => {
 				const requestFileName = path.resolve(result.context, result.request);
 				const jsFileName = requestFileName + '.js';
 
@@ -395,7 +395,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 							{
 								test: /src\/.*\.ts$/,
 								use: {
-									loader: 'istanbul-loader'
+									loader: '@theintern/istanbul-loader'
 								},
 								enforce: 'post'
 							}
@@ -409,7 +409,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 					...includeWhen(args.bundles && Object.keys(args.bundles).length, () => {
 						const loaders: any[] = [];
 
-					Object.keys(args.bundles).forEach(bundleName => {
+					Object.keys(args.bundles!).forEach(bundleName => {
 						(args.bundles || {})[ bundleName ].forEach(fileName => {
 							loaders.push({
 								test: /main\.ts/,

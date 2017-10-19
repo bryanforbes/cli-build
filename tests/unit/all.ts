@@ -7,4 +7,3 @@ import './plugins/IgnoreUnmodifiedPlugin';
 import './plugins/InjectModulesPlugin';
 import './plugins/util/i18n';
 import './plugins/util/main';
-import './loaders/istanbul-loader';

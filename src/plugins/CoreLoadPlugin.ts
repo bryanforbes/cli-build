@@ -3,11 +3,11 @@ import { createFilePathRegExp, getBasePath, resolveMid } from './util/main';
 import { CallExpression, Node, Program } from 'estree';
 import { getNextItem } from './util/parser';
 import Set from '@dojo/shim/Set';
-import ConcatSource = require('webpack-sources/lib/ConcatSource');
-import NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
-import Compiler = require('webpack/lib/Compiler');
+import webpack = require('webpack');
+import { ConcatSource } from 'webpack-sources';
 import NormalModule = require('webpack/lib/NormalModule');
 import Parser = require('webpack/lib/Parser');
+import Compiler = require('webpack/lib/Compiler');
 
 const RequireEnsureDependenciesBlock = require('webpack/lib/dependencies/RequireEnsureDependenciesBlock');
 const RequireEnsureItemDependency = require('webpack/lib/dependencies/RequireEnsureItemDependency');
@@ -191,7 +191,7 @@ export default class DojoLoadPlugin {
 		const ignoredModules = this._ignoredModules;
 		const coreLoadPattern = createFilePathRegExp('@dojo/core/load\\.js');
 
-		compiler.apply(new NormalModuleReplacementPlugin(coreLoadPattern, resolveMid('@dojo/core/load/webpack')));
+		compiler.apply(new webpack.NormalModuleReplacementPlugin(coreLoadPattern, resolveMid('@dojo/core/load/webpack')));
 
 		compiler.plugin('compilation', (compilation, params) => {
 			params.normalModuleFactory.plugin('parser', function (parser) {

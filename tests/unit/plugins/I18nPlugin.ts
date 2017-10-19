@@ -6,7 +6,7 @@ import { hasExtension, resolveMid } from '../../../src/plugins/util/main';
 import MockModule from '../../support/MockModule';
 import MockPlugin from '../../support/MockPlugin';
 import { fetchCldrData } from '../../support/util';
-import NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
+import { NormalModuleReplacementPlugin } from 'webpack';
 import Compilation = require('../../support/webpack/Compilation');
 import Compiler = require('../../support/webpack/Compiler');
 

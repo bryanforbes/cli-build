@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { resolve, sep } from 'path';
 import { createContext, runInContext } from 'vm';
-import { Config } from 'webpack';
+import { Configuration, NewModule } from 'webpack';
 import MockModule from '../support/MockModule';
 import { BuildArgs } from '../../src/main';
 
@@ -15,7 +15,7 @@ const configPath = resolve(basePath, 'src/webpack.config.js');
 const configString = readFileSync(configPath);
 const dirname = resolve(basePath, 'src');
 let mockModule: MockModule;
-let config: Config;
+let config: Configuration;
 
 function start(cli = true, args: Partial<BuildArgs> = {}) {
 	const mockPackageJson = {
@@ -81,7 +81,7 @@ function start(cli = true, args: Partial<BuildArgs> = {}) {
 
 function getUMDCompatLoader(args = {}) {
 	start(true, args);
-	return config.module.rules.reduce((value: any, rule: any) => {
+	return (<NewModule> config.module).rules.reduce((value: any, rule: any) => {
 		const loaders = rule.use || [];
 		return loaders.reduce((result: any, loader: any) => {
 			if (loader.loader === 'umd-compat-loader') {
@@ -186,7 +186,7 @@ describe('webpack.config.ts', () => {
 
 	describe('tslint', () => {
 		function getTslintLoader() {
-			const tsLintLoaders = config.module.rules.filter((rule) => rule.loader === 'tslint-loader');
+			const tsLintLoaders = (<any> config.module).rules.filter((rule: any) => rule.loader === 'tslint-loader');
 
 			return tsLintLoaders[0];
 		}
